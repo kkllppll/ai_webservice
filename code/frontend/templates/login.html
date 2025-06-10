@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Авторизація</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="page">
+    <div class="container" style="max-width: 400px;">
+      <h2 class="framed-title" style="text-align: center; margin-bottom: 24px;">Вхід / Реєстрація</h2>
+
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Пароль (мін. 6 символів)" minlength="6" required />
+
+        <button type="submit" style="width: 100%; margin-bottom: 10px;">Увійти</button>
+        <button type="button" id="registerBtn" style="width: 100%; background-color: #22c55e;">Зареєструватися</button>
+      </form>
+
+      <p id="errorMsg" class="error-msg hidden" style="margin-top: 16px;"></p>
+    </div>
+  </div>
+
+
+  <footer style="margin-top: 60px; text-align: center; font-size: 14px; color: #6b7280;">
+    <a href="https://github.com/kkllppll" target="_blank" style="color: #6b7280; text-decoration: none;">
+      Мій GitHub
+    </a>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+</body>
+</html>

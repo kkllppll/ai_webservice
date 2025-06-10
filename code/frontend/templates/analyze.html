@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Поглиблений аналіз</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+
+  
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD0S2-_l1QBXsp2emZU2qLmD027be7lW7o",
+      authDomain: "nlp-project-ai.firebaseapp.com",
+      projectId: "nlp-project-ai",
+      storageBucket: "nlp-project-ai.firebasestorage.app",
+      messagingSenderId: "223454429125",
+      appId: "1:223454429125:web:835509e1244675bbacd5ac",
+      measurementId: "G-MH3LSZ3ZLY"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <div class="page">
+    <div class="container">
+      <div class="center-block">
+        <button id="downloadPdfBtn" class="pdf-button">Завантажити аналіз як PDF</button>
+      </div>
+      
+      <h2 class="framed-title">Поглиблений аналіз настроїв тексту</h2>
+      <p class="subtext-description">ШІ визначення емоційного забарвлення, токсичності, тематики та змісту.</p>
+      <p class="section-hint">Введіть текст бо додайте файл для аналізу нижче:</p>
+
+      <textarea id="inputText" placeholder="Введіть текст..."></textarea>
+      
+      <div class="pick-file-above-buttons">
+        <div class="file-line">
+          <label class="custom-file">
+            <input type="file" id="uploadFile" accept=".txt,.json,.pdf,.docx,.mp3,.wav,.m4a">
+            <span class="btn-file-picker">Оберіть файл</span>
+          </label>
+          <span class="file-types">.txt, .json, .csv, .pdf, .docx, .mp3, .wav, .m4a</span>
+        </div>
+      </div>
+      
+
+      <div id="languageSelectBlock" class="hidden" style="margin-top: 12px;">
+        <label for="audioLanguage" style="font-weight: 500;">Оберіть мову для аудіо:</label>
+        <select id="audioLanguage" class="dropdown">
+          <option value="uk">Українська</option>
+          <option value="en">Англійська</option>
+          <option value="pl">Польська</option>
+          <option value="de">Німецька</option>
+          <option value="fr">Французька</option>
+          <option value="auto">Автовизначення</option>
+        </select>
+      </div>
+      
+      <div class="button-group">
+        <button onclick="handleFile()" class="btn-primary01">Проаналізувати файл</button>
+        <button id="analyzeBtn" class="btn-primary">Проаналізувати текст</button>
+      </div>
+
+            
+
+    
+      <!-- Ось тут анімація -->
+      <div id="baseLoader" class="hidden" style="text-align: center; margin-bottom: 16px; margin-top: 30px;">
+        <span class="loader-text">Аналізуємо...</span>
+      </div>
+    
+    
+      <div id="results" class="hidden">
+        <!-- Тональність -->
+        <div class="analysis-block">
+          <h2>Тональність</h2>
+          <canvas id="sentimentChart" width="400" height="200"></canvas>
+          <p id="mainSentimentText" style="text-align: center; font-weight: 600; margin-top: 12px;"></p>
+        </div>
+      
+        <!-- Токсичність -->
+        <div class="analysis-block">
+          <h2>Токсичність</h2>
+          <div id="toxicityChart"></div>
+          <p id="toxicityLabel" style="text-align: center; font-weight: 500; margin-top: 12px;"></p>
+          <div id="toxicityAlert" class="hidden" style="margin-top: 12px;"></div>
+        </div>
+        <!-- Перегенерація тексту -->
+        <div class="analysis-block">
+          <h2>Перегенерація тексту</h2>
+          <p>Оберіть, як переформулювати текст:</p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button onclick="regenerateText('lower')" class="btn-blue">⬇ Менш токсично</button>
+            <button onclick="regenerateText('raise')" class="btn-blue">⬆ Більш токсично</button>
+          </div>
+          <div id="regeneratedResult" class="summary-box" style="margin-top: 12px;"></div>
+        </div>
+
+      
+        <!-- Тематика -->
+        <div class="analysis-block">
+          <h2>Тематика</h2>
+          <div id="topics"></div>
+        </div>
+      
+        <!-- Резюме -->
+        <div class="analysis-block">
+          <h2>Резюме</h2>
+          <p style="margin-top: -10px; margin-bottom: 10px; font-size: 14px; color: #6b7280;">
+            Це згенероване AI-резюме, що коротко передає основну думку тексту.
+          </p>
+          <div id="summaryBox" class="summary-box">
+            <p id="summaryText" class="summary-text"></p>
+            <button id="copySummaryBtn" class="summary-copy-btn">Скопіювати</button>
+          </div>
+          <p id="copyStatus" class="copy-status hidden">Скопійовано!</p>
+        </div>
+      </div>
+      
+    <!-- Останні аналізи -->
+    <div id="recentAnalysesSection" class="hidden">
+      <h2>Останні аналізи:</h2>
+      <div id="recentAnalyses" class="analysis-grid"></div>
+    </div>
+
+  </div>
+</div>
+  
+
+
+ 
+   <footer style="margin-top: 60px; text-align: center; font-size: 14px; color: #6b7280;">
+    <a href="https://github.com/kkllppll" target="_blank" style="color: #6b7280; text-decoration: none;">
+      Мій GitHub
+    </a>
+  </footer>
+  
+
+
+  <script src="{{ url_for('static', filename='js/analyze.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+
+</body>
+</html>

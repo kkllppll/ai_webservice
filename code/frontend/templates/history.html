@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Історія аналізів</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script src="{{ url_for('static', filename='js/noto_sans_base64.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="page">
+    <div class="container">
+    <h2 class="framed-title" style="text-align: center;">Історія аналізів</h2>
+      <div class="history-header">
+        <div class="filter-bar">
+          <input type="date" id="filterDate" />
+          <input type="text" id="searchInput" placeholder="Пошук за словами..." />
+          <button id="clearHistoryBtn" class="danger-btn">Очистити історію</button>
+        </div>
+      </div>
+    
+  
+      <div id="historyContainer" class="analysis-grid">
+        <!-- Картки JS-ом -->
+      </div>
+    </div>
+  </div>
+  
+
+  <div id="modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <span id="closeModal" class="close-btn">&times;</span>
+      <h3>Деталі аналізу</h3>
+      <p><strong>Текст:</strong></p>
+      <p id="modalText"></p>
+      <hr>
+      <p><strong>Тональність:</strong> <span id="modalSentiment"></span></p>
+      <canvas id="sentimentChart" width="300" height="200"></canvas>
+      <p><strong>Токсичність:</strong> <span id="modalToxicity"></span></p>
+      <p><strong>Тематика:</strong> <span id="modalTopics"></span></p>
+      <p><strong>Резюме:</strong></p>
+      <p id="modalSummary"></p>
+    </div>
+  </div>
+
+  <footer style="margin-top: 60px; text-align: center; font-size: 14px; color: #6b7280;">
+    <a href="https://github.com/kkllppll" target="_blank" style="color: #6b7280; text-decoration: none;">
+      Мій GitHub
+    </a>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+</body>
+</html>
