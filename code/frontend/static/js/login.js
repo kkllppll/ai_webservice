@@ -1,5 +1,5 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyD0S2-_l1QBXsp2emZU2qLmD027be7lW7o",
+  apiKey: ,
   authDomain: "nlp-project-ai.firebaseapp.com",
   projectId: "nlp-project-ai",
   storageBucket: "nlp-project-ai.firebasestorage.app",
@@ -63,3 +63,4 @@ function mapFirebaseError(error) {
   if (error.code === 'auth/weak-password') return 'Пароль має містити щонайменше 6 символів.';
   return 'Сталася помилка. Спробуйте ще раз.';
 }
+
