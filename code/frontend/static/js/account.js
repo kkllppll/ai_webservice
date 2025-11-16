@@ -1,5 +1,5 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyD0S2-_l1QBXsp2emZU2qLmD027be7lW7o",
+  apiKey: ,
   authDomain: "nlp-project-ai.firebaseapp.com",
   projectId: "nlp-project-ai",
   storageBucket: "nlp-project-ai.firebasestorage.app",
@@ -68,3 +68,4 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
     alert('Помилка при виході з акаунта: ' + err.message);
   }
 });
+
