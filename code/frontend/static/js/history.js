@@ -1,6 +1,6 @@
 // ініціалізація Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyD0S2-_l1QBXsp2emZU2qLmD027be7lW7o",
+    apiKey: ,
     authDomain: "nlp-project-ai.firebaseapp.com",
     projectId: "nlp-project-ai",
     storageBucket: "nlp-project-ai.firebasestorage.app",
@@ -242,4 +242,5 @@ const firebaseConfig = {
   
   searchInput?.addEventListener('input', filterHistory);
   filterDate?.addEventListener('change', filterHistory);
+
   
